@@ -2,17 +2,29 @@
 
 import MoreMenu from '@/components/more/MoreMenu';
 import {
-  PATH_ADMIN_CONFIGURATION,
   PATH_ADMIN_INSIGHTS,
+  PATH_ADMIN_PHOTOS,
+  PATH_ADMIN_TAGS,
   PATH_GRID_INFERRED,
 } from '@/app/paths';
 import { useAppState } from '@/state/AppState';
 import { ImCheckboxUnchecked } from 'react-icons/im';
 import { IoCloseSharp } from 'react-icons/io5';
-import AdminAppInsightsIcon from './insights/AdminAppInsightsIcon';
-import { LuCog } from 'react-icons/lu';
+import { clsx } from 'clsx/lite';
+import { TbPhoto } from 'react-icons/tb';
+import { FiTag } from 'react-icons/fi';
+import { BiLockAlt } from 'react-icons/bi';
+import AdminAppInfoIcon from './AdminAppInfoIcon';
+import { PiSignOutBold } from 'react-icons/pi';
+import { signOutAndRedirectAction } from '@/auth/actions';
 
-export default function AdminAppMenu() {
+export default function AdminAppMenu({
+  className,
+  buttonClassName,
+}: {
+  className?: string
+  buttonClassName?: string
+}) {
   const {
     selectedPhotoIds,
     setSelectedPhotoIds,
@@ -22,28 +34,48 @@ export default function AdminAppMenu() {
 
   return (
     <MoreMenu
+      header="Admin menu"
+      icon={<BiLockAlt size={16} className="translate-y-[-0.5px]" />}
+      align="start"
+      className={clsx(
+        'border-medium',
+        className,
+      )}
+      buttonClassName={clsx(
+        'rounded-none focus:outline-none',
+        buttonClassName,
+      )}
       items={[{
-        label: 'Insights',
-        icon: <span className="scale-90 translate-y-[-2px]">
-          <AdminAppInsightsIcon />
-        </span>,
-        href: PATH_ADMIN_INSIGHTS,
-      }, {
-        label: 'Configuration',
-        icon: <LuCog
-          className="text-[16px] translate-x-[0.5px]"
+        label: 'Manage Photos',
+        icon: <TbPhoto
+          size={16}
+          className="translate-x-[1px] translate-y-[0.5px]"
         />,
-        href: PATH_ADMIN_CONFIGURATION,
+        href: PATH_ADMIN_PHOTOS,
+      }, {
+        label: 'Manage Tags',
+        icon: <FiTag
+          size={16}
+          className="translate-x-[1.5px] translate-y-[0.5px]"
+        />,
+        href: PATH_ADMIN_TAGS,
+      }, {
+        label: 'App Info',
+        icon: <AdminAppInfoIcon
+          size="small"
+          className="translate-x-[1px] translate-y-[-0.5px]"
+        />,
+        href: PATH_ADMIN_INSIGHTS,
       }, {
         label: isSelecting
           ? 'Exit Select'
-          : 'Select',
+          : 'Select Photos',
         icon: isSelecting
           ? <IoCloseSharp
             className="text-[18px] translate-y-[-0.5px]"
           />
           : <ImCheckboxUnchecked
-            className="text-[0.75rem] translate-x-[0.5px]"
+            className="text-[0.75rem] translate-x-[1px]"
           />,
         href: PATH_GRID_INFERRED,
         action: () => {
@@ -57,6 +89,10 @@ export default function AdminAppMenu() {
           }
         },
         shouldPreventDefault: false,
+      }, {
+        label: 'Sign Out',
+        icon: <PiSignOutBold size={15} className="translate-x-[1px]" />,
+        action: signOutAndRedirectAction,
       }]}
       ariaLabel="Admin Menu"
     />
